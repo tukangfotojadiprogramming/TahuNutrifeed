@@ -1,0 +1,14 @@
+<?php
+require 'config.php';
+$id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$s=$pdo->prepare("SELECT * FROM products WHERE id=?");$s->execute([$id?:0]);$product=$s->fetch();
+if(!$product){http_response_code(404);exit('Produk tidak ditemukan. <a href="produk.php">Kembali</a>');}
+$error='';
+if($_SERVER['REQUEST_METHOD']==='POST'){
+ $name=trim($_POST['customer_name']??'');$phone=trim($_POST['phone']??'');$address=trim($_POST['address']??'');$qty=(int)($_POST['quantity']??0);$notes=trim($_POST['notes']??'');
+ if(!$name||!$phone||$qty<1){$error='Lengkapi nama, nomor WhatsApp, dan jumlah pesanan.';}
+ elseif($qty>(int)$product['stock']){$error='Jumlah melebihi stok yang tercatat. Hubungi admin untuk konfirmasi.';}
+ else{$total=$qty*(float)$product['price'];$s=$pdo->prepare("INSERT INTO orders(customer_name,phone,address,product_id,product_name,quantity,total_price,status,notes) VALUES(?,?,?,?,?,?,?,'Baru',?)");$s->execute([$name,$phone,$address,$product['id'],$product['name'],$qty,$total,$notes]);$orderId=$pdo->lastInsertId();$wa='6281234567890';$msg="Halo TahuNutrifeed, saya sudah mengirim pesanan melalui website.\nNomor pesanan: #$orderId\nNama: $name\nProduk: {$product['name']}\nJumlah: $qty kg\nPerkiraan total: ".rupiah($total)."\nMohon konfirmasi stok dan harga.";header('Location: https://wa.me/'.$wa.'?text='.rawurlencode($msg));exit;}
+}
+?>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pesan Produk | TahuNutrifeed</title><link rel="stylesheet" href="assets/style.css"></head><body><header class="nav"><a class="brand" href="index.php">🌱 TahuNutrifeed</a><nav><a href="index.php">Beranda</a><a href="produk.php">Produk</a><a href="tentang.php">Tentang Kami</a><a href="dampak.php">Dampak</a></nav></header><main class="section form-section"><a href="detail.php?id=<?=(int)$product['id']?>">← Kembali ke produk</a><h1>Pesan <?=e($product['name'])?></h1><p>Isi data di bawah. Pesanan akan tercatat dan WhatsApp terbuka untuk konfirmasi dengan admin.</p><?php if($error): ?><p class="error"><?=e($error)?></p><?php endif; ?><div class="info-box">Harga referensi: <b><?=rupiah($product['price'])?>/kg</b>. Harga dan ketersediaan perlu dikonfirmasi admin.</div><form method="post" class="edit-form"><label>Nama lengkap<input name="customer_name" required></label><label>Nomor WhatsApp<input name="phone" required></label><label>Alamat (opsional)<input name="address"></label><label>Jumlah (kg)<input type="number" name="quantity" min="1" max="<?=(int)$product['stock']?>" required></label><label>Catatan (opsional)<textarea name="notes" rows="3"></textarea></label><button class="btn">Kirim Pesanan & Lanjut WhatsApp</button></form></main></body></html>

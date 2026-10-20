@@ -1,0 +1,9 @@
+<?php
+require '../config.php';
+if (empty($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
+$products=getProducts($pdo);
+?>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kelola Produk | TahuNutrifeed</title><link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="nav"><a class="brand" href="../index.php">🌱 TahuNutrifeed <small>Admin</small></a><nav><a href="index.php">Dashboard</a><a class="active" href="products.php">Produk</a><a href="orders.php">Pesanan</a><a href="profile.php">Profil Usaha</a></nav><a class="btn small" href="logout.php">Keluar</a></header>
+<main class="section"><div class="section-head"><div><span class="eyebrow">MANAJEMEN PRODUK</span><h1>Kelola Produk</h1><p>Atur katalog, harga, dan stok produk.</p></div><a class="btn" href="product_form.php">+ Tambah Produk</a></div>
+<div class="table-wrap"><table><thead><tr><th>Produk</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead><tbody><?php foreach($products as $p): ?><tr><td><b><?=e($p['name'])?></b><br><small><?=e(mb_strimwidth($p['description'],0,85,'…'))?></small></td><td><?=rupiah($p['price'])?></td><td><?= (int)$p['stock'] ?></td><td><a class="btn tiny" href="product_form.php?id=<?=(int)$p['id']?>">Edit</a> <form class="inline" method="post" action="delete.php" onsubmit="return confirm('Hapus produk ini?')"><input type="hidden" name="id" value="<?=(int)$p['id']?>"><button class="btn danger tiny">Hapus</button></form></td></tr><?php endforeach; ?></tbody></table></div></main></body></html>
