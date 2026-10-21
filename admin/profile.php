@@ -1,7 +1,7 @@
 <?php
 require '../config.php';
 if (empty($_SESSION['admin_id'])) { header('Location: login.php'); exit; }
-$defaults=['business_name'=>'UD. Tahu Yaya','address'=>'Kelurahan Abian Tubuh, Kecamatan Sandubaya, Kota Mataram','description'=>'Usaha produksi tahu yang mengembangkan pemanfaatan limbah ampas tahu menjadi pakan ternak bernilai ekonomis.','phone'=>'6281234567890','email'=>''];
+$defaults=['business_name'=>'UD. Tahu Yaya','address'=>'Kelurahan Abian Tubuh, Kecamatan Sandubaya, Kota Mataram','description'=>'Usaha produksi tahu yang mengembangkan pemanfaatan limbah ampas tahu menjadi pakan ternak bernilai ekonomis.','phone'=>'6287765470125','email'=>''];
 $profile=$defaults;
 foreach($pdo->query("SELECT setting_key,setting_value FROM settings")->fetchAll() as $r){$profile[$r['setting_key']]=$r['setting_value'];}
 $msg='';

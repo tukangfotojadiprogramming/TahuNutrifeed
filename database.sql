@@ -18,14 +18,10 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 INSERT INTO products (name, description, price, stock, image) VALUES
-('Pakan Ternak Ampas Tahu', 'Pakan ternak berbahan ampas tahu. Hubungi kami untuk informasi proses pengolahan, kandungan, dan ketersediaan produk.', 5000, 100, 'assets/pakan.jpg'),
-('Ampas Tahu Kering', 'Pilihan ampas tahu kering untuk kebutuhan pakan ternak. Ketersediaan dan berat kemasan dapat dikonfirmasi melalui WhatsApp.', 3000, 80, 'assets/ampas.jpg'),
-('Pakan Campuran', 'Produk campuran berbahan ampas tahu. Komposisi dan petunjuk pemakaian perlu dikonfirmasi kepada pengelola.', 4500, 50, 'assets/campuran.jpg');
+('Pakan Ternak Ampas Tahu', 'Pakan ternak berbahan ampas tahu. Hubungi kami untuk informasi proses pengolahan, kandungan, dan ketersediaan produk.', 5000, 100, 'assets/original.jpeg'),
+('Ampas Tahu Kering', 'Pilihan ampas tahu kering untuk kebutuhan pakan ternak. Ketersediaan dan berat kemasan dapat dikonfirmasi melalui WhatsApp.', 3000, 80, 'assets/pelet.jpeg'),
+('Pakan Campuran', 'Produk campuran berbahan ampas tahu. Komposisi dan petunjuk pemakaian perlu dikonfirmasi kepada pengelola.', 4500, 50, 'assets/campuran.jpeg');
 
--- Buat password hash admin dengan PHP:
--- php -r "echo password_hash('GantiPasswordKuat123!', PASSWORD_DEFAULT), PHP_EOL;"
--- Lalu masukkan hasil hash:
--- INSERT INTO admins (username, password_hash) VALUES ('admin', 'TEMPEL_HASH_DI_SINI');
 
 
 CREATE TABLE IF NOT EXISTS orders (
@@ -50,5 +46,5 @@ INSERT IGNORE INTO settings(setting_key,setting_value) VALUES
 ('business_name','UD. Tahu Yaya'),
 ('address','Kelurahan Abian Tubuh, Kecamatan Sandubaya, Kota Mataram'),
 ('description','Usaha produksi tahu yang mengembangkan pemanfaatan limbah ampas tahu menjadi pakan ternak bernilai ekonomis.'),
-('phone','6281234567890'),
+('phone','6287765470125'),
 ('email','');

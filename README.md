@@ -14,7 +14,7 @@ Website starter untuk proyek pemanfaatan limbah ampas tahu menjadi pakan ternak.
 3. Import `database.sql` melalui phpMyAdmin. Jika memakai database lama, tabel baru `orders` dan `settings` perlu dibuat/import juga.
 4. Buka `http://localhost/tahunutrifeed/admin/create_admin.php`, buat akun admin kuat, lalu hapus file itu.
 5. Buka `http://localhost/tahunutrifeed/` atau `http://localhost/tahunutrifeed/admin/login.php`.
-6. Ganti nomor contoh `6281234567890` dengan nomor WhatsApp UD. Tahu Yaya. Nomor masih ditulis langsung pada beberapa file.
+6. Ganti nomor contoh `6287765470125` dengan nomor WhatsApp UD. Tahu Yaya. Nomor masih ditulis langsung pada beberapa file.
 7. Ubah data produk, harga, stok, dan foto sesuai kondisi sebenarnya.
 
 ## Penting
