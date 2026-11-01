@@ -8,6 +8,29 @@ $completedOrders = (int)$pdo->query("SELECT COUNT(*) FROM orders WHERE status = 
 $orders = $pdo->query("SELECT * FROM orders ORDER BY created_at DESC, id DESC LIMIT 5")->fetchAll();
 $products = $pdo->query("SELECT * FROM products ORDER BY id DESC LIMIT 5")->fetchAll();
 
+
+$financeMonth = date('Y-m');
+
+$financeStmt = $pdo->prepare("
+    SELECT
+        COALESCE(SUM(CASE
+            WHEN type = 'Pemasukan' THEN amount ELSE 0
+        END), 0) AS income,
+        COALESCE(SUM(CASE
+            WHEN type = 'Pengeluaran' THEN amount ELSE 0
+        END), 0) AS expense,
+        COUNT(*) AS transaction_count
+    FROM finance_transactions
+    WHERE DATE_FORMAT(transaction_date, '%Y-%m') = ?
+");
+$financeStmt->execute([$financeMonth]);
+$financeSummary = $financeStmt->fetch(PDO::FETCH_ASSOC);
+
+$income = (float)($financeSummary['income'] ?? 0);
+$expense = (float)($financeSummary['expense'] ?? 0);
+$netProfit = $income - $expense;
+
+
 admin_header('Dashboard', 'dashboard');
 ?>
 <div class="page-heading"><div><p class="eyebrow">RINGKASAN USAHA</p><h1>Dashboard Admin</h1><p class="muted">Kelola produk dan pesanan TahuNutrifeed dari satu tempat.</p></div><span class="date-pill"><?= date('d M Y') ?></span></div>
@@ -18,6 +41,48 @@ admin_header('Dashboard', 'dashboard');
   <article class="stat-card blue"><span class="stat-icon">↻</span><div><p>Pesanan Diproses</p><strong><?= $processingOrders ?></strong><small>Sedang ditangani</small></div></article>
   <article class="stat-card mint"><span class="stat-icon">✓</span><div><p>Pesanan Selesai</p><strong><?= $completedOrders ?></strong><small>Telah diselesaikan</small></div></article>
 </div>
+
+
+<section class="panel finance-summary-panel">
+  <div class="panel-head">
+    <div>
+      <h2>Ringkasan Keuangan</h2>
+      <p class="muted">
+        Ringkasan transaksi bulan <?= e(date('F Y')) ?>.
+      </p>
+    </div>
+    <a class="btn" href="finance.php">Buka Pembukuan →</a>
+  </div>
+
+  <div class="finance-mini-grid">
+    <div class="finance-mini">
+      <span>Total Pemasukan</span>
+      <strong><?= rupiah($income) ?></strong>
+    </div>
+
+    <div class="finance-mini">
+      <span>Total Pengeluaran</span>
+      <strong><?= rupiah($expense) ?></strong>
+    </div>
+
+    <div class="finance-mini">
+      <span>Selisih Bulan Ini</span>
+      <strong><?= rupiah($netProfit) ?></strong>
+    </div>
+
+    <div class="finance-mini">
+      <span>Jumlah Transaksi</span>
+      <strong><?= (int)($financeSummary['transaction_count'] ?? 0) ?></strong>
+    </div>
+  </div>
+
+  <p class="finance-note">
+    Selisih dihitung dari pemasukan dikurangi pengeluaran yang tercatat
+    pada bulan ini. Untuk mengetahui keuntungan bersih yang akurat,
+    semua biaya produksi dan operasional harus dicatat.
+  </p>
+</section>
+
 
 <section class="panel">
   <div class="panel-head"><div><h2>Pesanan Terbaru</h2><p class="muted">Pesanan yang dikirim melalui formulir website.</p></div><a class="btn btn-light" href="orders.php">Lihat Semua →</a></div>

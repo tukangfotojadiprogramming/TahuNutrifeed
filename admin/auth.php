@@ -28,6 +28,7 @@ function admin_header(string $title, string $active = 'dashboard'): void {
         'dashboard' => ['Dashboard', 'index.php', '⌂'],
         'orders' => ['Pesanan', 'orders.php', '▤'],
         'products' => ['Produk', 'products.php', '▦'],
+        'finance' => ['Keuangan & Pembukuan', 'finance.php', 'Rp'],
     ];
     ?>
     <!doctype html>

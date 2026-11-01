@@ -29,11 +29,25 @@ admin_header('Kelola Produk', 'products');
 <section class="panel">
   <div class="panel-head"><div><h2>Daftar Produk</h2><p class="muted"><?= count($products) ?> produk ditemukan</p></div>
   <form class="search-form" method="get"><input name="q" value="<?= e($q) ?>" placeholder="Cari nama produk..."><button class="btn btn-light" type="submit">Cari</button></form></div>
-  <div class="table-wrap"><table><thead><tr><th>Produk</th><th>Harga per kg</th><th>Stok</th><th>Ditambahkan</th><th>Aksi</th></tr></thead><tbody>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Produk</th>
+        <th>Modal per Kemasan</th>
+        <th>Harga Jual</th>
+        <th>Stok</th>
+        <th>Ditambahkan</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
   <?php if (!$products): ?><tr><td colspan="5" class="empty">Produk tidak ditemukan.</td></tr><?php endif; ?>
   <?php foreach ($products as $p): ?><tr>
     <td><div class="product-cell"><?php if (!empty($p['image'])): ?><img src="../<?= e($p['image']) ?>" alt=""><?php else: ?><span class="product-placeholder">🌾</span><?php endif; ?><span><b><?= e($p['name']) ?></b><small class="subline"><?= e(mb_strimwidth($p['description'], 0, 90, '…')) ?></small></span></div></td>
-    <td><?= rupiah($p['price']) ?></td><td><?= (int)$p['stock'] ?> kg</td>
+   <td><?= rupiah($p['cost_per_pack']) ?></td>
+<td><?= rupiah($p['price']) ?></td>
+<td><?= (int)$p['stock'] ?> kg</td>
     <td><?= e(date('d/m/Y', strtotime($p['created_at']))) ?></td>
     <td><div class="actions-inline"><a class="btn btn-small btn-light" href="product_form.php?id=<?= (int)$p['id'] ?>">Edit</a>
       <form method="post" onsubmit="return confirm('Yakin ingin menghapus produk ini?')"><?= csrf_field() ?><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?= (int)$p['id'] ?>"><button class="btn btn-small btn-danger" type="submit">Hapus</button></form></div></td>
