@@ -34,7 +34,7 @@ admin_header('Kelola Produk', 'products');
     <thead>
       <tr>
         <th>Produk</th>
-        <th>Modal per Kemasan</th>
+        <th>Modal per Kg</th>
         <th>Harga Jual</th>
         <th>Stok</th>
         <th>Ditambahkan</th>
@@ -42,10 +42,10 @@ admin_header('Kelola Produk', 'products');
       </tr>
     </thead>
     <tbody>
-  <?php if (!$products): ?><tr><td colspan="5" class="empty">Produk tidak ditemukan.</td></tr><?php endif; ?>
+  <?php if (!$products): ?><tr><td colspan="6" class="empty">Produk tidak ditemukan.</td></tr><?php endif; ?>
   <?php foreach ($products as $p): ?><tr>
     <td><div class="product-cell"><?php if (!empty($p['image'])): ?><img src="../<?= e($p['image']) ?>" alt=""><?php else: ?><span class="product-placeholder">🌾</span><?php endif; ?><span><b><?= e($p['name']) ?></b><small class="subline"><?= e(mb_strimwidth($p['description'], 0, 90, '…')) ?></small></span></div></td>
-   <td><?= rupiah($p['cost_per_pack']) ?></td>
+    <td><?= rupiah($p['cost_per_pack'] / 25) ?></td>
 <td><?= rupiah($p['price']) ?></td>
 <td><?= (int)$p['stock'] ?> kg</td>
     <td><?= e(date('d/m/Y', strtotime($p['created_at']))) ?></td>

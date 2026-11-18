@@ -41,7 +41,7 @@ function admin_header(string $title, string $active = 'dashboard'): void {
     </head>
     <body>
     <aside class="sidebar">
-      <a class="brand" href="index.php"><span class="brand-mark">♻</span><span><b>TahuNutrifeed</b><small>ADMIN PANEL</small></span></a>
+      <a class="brand" href="index.php"><span><b>TahuNutrifeed</b></span></a>
       <div class="nav-label">MENU UTAMA</div>
       <?php foreach ($menus as $key => $menu): ?>
         <a class="side-link <?= $active === $key ? 'active' : '' ?>" href="<?= e($menu[1]) ?>">
@@ -54,7 +54,7 @@ function admin_header(string $title, string $active = 'dashboard'): void {
       </div>
     </aside>
     <main class="main">
-      <header class="topbar"><span>Panel Pengelolaan Usaha</span><span class="top-admin">● &nbsp; Admin</span></header>
+      <header class="topbar"><span>Panel Pengelolaan Usaha</span><span class="top-admin"></span></header>
       <section class="page">
     <?php
 }

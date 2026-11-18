@@ -85,10 +85,14 @@ if ($search !== '') {
     $orders = $pdo->query("SELECT * FROM orders ORDER BY created_at DESC, id DESC")->fetchAll();
 }
 // Ringkasan penjualan dari pesanan yang sudah selesai
+
 $profitStmt = $pdo->query("
     SELECT
         COALESCE(SUM(o.total_price), 0) AS omzet,
-        COALESCE(SUM(o.quantity * p.cost_per_pack), 0) AS total_modal
+        COALESCE(
+            SUM(o.quantity * p.cost_per_pack / 25),
+            0
+        ) AS total_modal
     FROM orders o
     LEFT JOIN products p ON p.id = o.product_id
     WHERE o.status = 'Selesai'
@@ -96,9 +100,10 @@ $profitStmt = $pdo->query("
 
 $profitSummary = $profitStmt->fetch();
 
-$omzet = (float)($profitSummary['omzet'] ?? 0);
-$totalModalTerjual = (float)($profitSummary['total_modal'] ?? 0);
+$omzet = (float) ($profitSummary['omzet'] ?? 0);
+$totalModalTerjual = (float) ($profitSummary['total_modal'] ?? 0);
 $keuntunganKotor = $omzet - $totalModalTerjual;
+
 $detail = null;
 if ($selected) {
     $stmt = $pdo->prepare("SELECT * FROM orders WHERE id = ?");

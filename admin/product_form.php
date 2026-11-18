@@ -25,8 +25,11 @@ if ($id) {
         exit('Produk tidak ditemukan. <a href="products.php">Kembali</a>');
     }
 
-    $product = $found;
+$product = $found;
 }
+
+// Tampilkan modal per kg di form, bukan modal per kemasan.
+$product['cost_per_pack'] = (float) $found['cost_per_pack'] / 25;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     check_csrf();
@@ -60,9 +63,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ) {
         $error = 'Stok harus berupa bilangan bulat nol atau lebih.';
     } else {
-        $price = (float)$product['price'];
-        $cost = (float)$product['cost_per_pack'];
-        $stock = (int)$product['stock'];
+        $price = (float) $product['price'];
+
+        // Input modal adalah per kg.
+        // Database tetap menyimpan modal untuk kemasan 25 kg.
+        $costPerKg = (float) $product['cost_per_pack'];
+        $cost = $costPerKg * 25;
+
+        $stock = (int) $product['stock'];
 
         if ($id) {
             $stmt = $pdo->prepare("
@@ -152,25 +160,28 @@ admin_header($id ? 'Edit Produk' : 'Tambah Produk', 'products');
             ><?= e($product['description']) ?></textarea>
         </div>
 
+        
         <div class="field">
-            <label for="cost_per_pack">Modal per Kemasan (Rp) *</label>
+            <label for="cost_per_pack">Modal per Kg (Rp) *</label>
             <input
                 id="cost_per_pack"
                 name="cost_per_pack"
                 type="number"
                 min="0"
-                step="0.01"
-                value="<?= e((string)$product['cost_per_pack']) ?>"
+                step="1"
+                value="<?= e((string) $product['cost_per_pack']) ?>"
                 required
-                placeholder="Contoh: 3000"
+                placeholder="Contoh: 50000"
             >
             <small class="muted">
-                Biaya produksi untuk satu kemasan.
+                Masukkan modal untuk setiap 1 kg produk.
+                Sistem akan menghitung modal kemasan 25 kg secara otomatis.
             </small>
         </div>
 
+
         <div class="field">
-            <label for="price">Harga Jual per Kemasan (Rp) *</label>
+            <label for="price">Harga Jual per Kg (Rp) *</label>
             <input
                 id="price"
                 name="price"
