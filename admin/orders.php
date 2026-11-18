@@ -61,8 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $pdo->commit();
-            header('Location: orders.php?updated=1');
-            exit;
+            header('Location: orders.php?updated=1&id=' . $id);
+            exit;       
+            
         } catch (Throwable $e) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();
@@ -147,9 +148,51 @@ admin_header('Kelola Pesanan', 'orders');
     <div class="wide-detail"><span class="detail-label">Catatan</span><p><?= nl2br(e($detail['notes'] ?: 'Tidak ada catatan.')) ?></p></div>
   </div>
   <form method="post" class="status-form"><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$detail['id'] ?>"><label for="status">Status pesanan</label><select name="status" id="status"><?php foreach ($allowedStatuses as $s): ?><option value="<?= e($s) ?>" <?= $detail['status'] === $s ? 'selected' : '' ?>><?= e($s) ?></option><?php endforeach; ?></select><button class="btn" type="submit">Simpan Status</button>
-  <?php $phoneDigits = preg_replace('/\D+/', '', $detail['phone']); ?>
-  <a class="btn btn-light" target="_blank" rel="noopener" href="https://wa.me/<?= e($phoneDigits) ?>">Hubungi Pemesan ↗</a></form>
-</section>
+    <?php
+// Ubah nomor menjadi format internasional Indonesia.
+$phoneDigits = preg_replace('/\D+/', '', $detail['phone']);
+
+if (substr($phoneDigits, 0, 1) === '0') {
+    $phoneDigits = '62' . substr($phoneDigits, 1);
+} elseif (substr($phoneDigits, 0, 2) !== '62') {
+    $phoneDigits = '62' . $phoneDigits;
+}
+
+// Pesan disesuaikan dengan status pesanan yang tersimpan.
+$statusMessages = [
+    'Baru' => 'Pesanan Kakak sudah kami terima dan akan segera kami tindak lanjuti.',
+    'Diproses' => 'Pesanan Kakak sedang kami proses.',
+    'Selesai' => 'Pesanan Kakak telah selesai diproses. Silakan hubungi kami untuk konfirmasi pengambilan atau pengiriman.',
+    'Dibatalkan' => 'Mohon maaf, pesanan Kakak telah dibatalkan. Silakan hubungi kami jika memerlukan informasi lebih lanjut.'
+];
+
+$currentStatus = $detail['status'];
+$statusDescription = $statusMessages[$currentStatus]
+    ?? 'Status pesanan Kakak sedang kami perbarui.';
+
+// Susun pesan WhatsApp.
+$waMessage =
+    "Halo Kak " . $detail['customer_name'] . "! \n\n" .
+    "Kami dari TahuNutrifeed ingin menginformasikan perkembangan pesanan Kakak.\n\n" .
+    "Nomor pesanan: TNF-" . (int)$detail['id'] . "\n" .
+    "Produk: " . $detail['product_name'] . "\n" .
+    "Jumlah: " . (int)$detail['quantity'] . " kg\n" .
+    "Perkiraan total: " . rupiah($detail['total_price']) . "\n" .
+    "Status pesanan: " . $currentStatus . "\n\n" .
+    $statusDescription . "\n\n" .
+    "Terima kasih telah memesan di TahuNutrifeed! ";
+?>
+
+<a
+    class="btn btn-light"
+    href="https://wa.me/<?= e($phoneDigits) ?>?text=<?= rawurlencode($waMessage) ?>"
+    target="_blank"
+    rel="noopener"
+>
+    Hubungi Pemesan ↗
+</a>
+</form>
+</section>      
 <?php endif; ?>
 
 <section class="panel">

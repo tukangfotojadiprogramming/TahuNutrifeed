@@ -6,22 +6,34 @@ $wa = '6287765470125'; // GANTI dengan nomor WhatsApp UD. Tahu Yaya, format 62 t
 <!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TahuNutrifeed | Pakan Ternak dari Ampas Tahu</title>
 <link rel="stylesheet" href="assets/style.css?v=3">
+<style>
+.hero {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+.hero-image img {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(29, 78, 36, 0.25);
+}
+@media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-image img { margin: 0 auto; max-width: 380px; }
+}
+</style>
 </head><body>
 <header class="nav"><a class="brand" href="index.php"><span class="leaf">♻️</span> TahuNutrifeed</a><nav><a href="index.php">Beranda</a><a href="produk.php">Produk</a><a href="tentang.php">Tentang Kami</a><a href="dampak.php">Dampak</a></nav><a class="btn small" href="https://wa.me/<?=e($wa)?>?text=Halo%20TahuNutrifeed%2C%20saya%20ingin%20bertanya%20tentang%20produk" target="_blank">Hubungi Kami ↗</a></header>
 <main>
 <section class="hero"><div class="hero-text"><span class="eyebrow">DARI LIMBAH MENJADI MANFAAT</span><h1>Ampas Tahu,<br><em>Manfaat Baru</em><br>untuk Peternakan.</h1><p>Kami mengembangkan pemanfaatan limbah ampas tahu menjadi produk pakan ternak yang memiliki nilai ekonomi.</p><div class="actions"><a class="btn" href="produk.php">Jelajahi Produk →</a><a class="btn outline" href="tentang.php">Kenali Usaha Kami</a></div><div class="hero-note">♻ Mengurangi limbah · Mendukung ekonomi lokal</div></div>
 
 <div class="hero-image">
-    <div class="image-card">
-        <img
-            src="assets/produk-pakan.png"
-            alt="Produk Pelet Pakan Campuran Ampas Tahu"
-        >
-        <div class="image-overlay">
-            <b>Lebih bermanfaat.</b><br>
-            <span>Lebih berkelanjutan.</span>
-        </div>
-    </div>
+    <img src="assets/original.jpeg" alt="Pakan Campuran Ampas Tahu TahuNutrifeed 25 KG">
 </div>
 
 </section>
